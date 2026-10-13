@@ -2,5 +2,3 @@
 
 Autor: Patryk Kasperowicz
 Laboratorium informatyki 2026/27
-
-dodaje opis

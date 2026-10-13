@@ -7,4 +7,5 @@ int main() {
 std::cout << "Hello, Git!";
 int x = 5;
 return 0;
+#dodaje opis
 }
