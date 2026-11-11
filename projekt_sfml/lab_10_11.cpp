@@ -166,10 +166,7 @@ bool Pilka::collidePaddle(const Paletka& p) {
 	float p_szerokosc = p.getSzerokosc();
 	float p_wysokosc = p.getWysokosc();
 
-	if ((y + radius) >= (p_Y - p_wysokosc / 2) &&
-		x >= (p_X - p_szerokosc / 2) &&
-		x <= (p_X + p_szerokosc / 2)) {
-
+	if ((y + radius) >= (p_Y - p_wysokosc / 2) && x >= (p_X - p_szerokosc / 2) && x <= (p_X + p_szerokosc / 2)) {
 		vy = -std::abs(vy);
 		y = (p_Y - p_wysokosc / 2) - radius;
 		shape.setPosition({ x, y });
