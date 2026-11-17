@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include "Stone.h"
 
 
 class Paletka {
@@ -145,21 +146,6 @@ void Pilka::collideWalls(float width, float height) {
 	}
 }
 
-//bool Pilka::collidePaddle(const Paletka& p) {
-//	float p_X = p.getX();
-//	float p_Y = p.getY();
-//	float p_szerokosc = p.getSzerokosc();
-//	float p_wysokosc = p.getWysokosc();
-//
-//	if ((y + radius) >= (p_Y - p_wysokosc / 2) && (y - radius) < (p_Y - p_wysokosc / 2)) {
-//		vy = -std::abs(vy);
-//		vy = -std::abs(vy);
-//		y = (p_Y - p_wysokosc / 2) - radius; shape.setPosition({ x, y });
-//		return true;
-//	}
-//	else return false;
-//}
-
 bool Pilka::collidePaddle(const Paletka& p) {
 	float p_X = p.getX();
 	float p_Y = p.getY();
@@ -179,6 +165,13 @@ void Pilka::draw(sf::RenderTarget & target) {
 	target.draw(shape);
 }
 
+const std::array<sf::Color, 4> Stone::m_colorLUT = {
+	sf::Color::Transparent, // L = 0
+	sf::Color::Red,         // L = 1
+	sf::Color::Yellow,      // L = 2
+	sf::Color::Blue         // L = 3
+};
+
 int main() {
 	const float WIDTH = 640.f;
 	const float HEIGHT = 480.f;
@@ -187,6 +180,22 @@ int main() {
 
 	Paletka pal(320.f, 440.f, 100.f, 20.f, 8.f);
 	Pilka pilka(320.f, 200.f, 4.f, 3.f, 8.f);
+
+	std::vector<Stone> bloki;
+	const int ILOSC_KOLUMN = 6;
+	const int ILOSC_WIERSZY = 7;
+	const float ROZMIAR_BLOKU_Y = 25.f;
+	const float ROZMIAR_BLOKU_X = (WIDTH - (ILOSC_KOLUMN - 1) * 2.f) / ILOSC_KOLUMN;
+	bloki.reserve(ILOSC_KOLUMN * ILOSC_WIERSZY);
+
+	for (int y = 0; y < ILOSC_WIERSZY; y++) {
+		for (int x = 0; x < ILOSC_KOLUMN; x++) {
+			sf::Vector2f pos(x * (ROZMIAR_BLOKU_X + 2.f), (y * (ROZMIAR_BLOKU_Y + 2.f)));
+			sf::Vector2f size(ROZMIAR_BLOKU_X, ROZMIAR_BLOKU_Y);
+			int L = (y < 1) ? 3 : (y < 3) ? 2 : 1;
+			bloki.emplace_back(pos, size, L);
+		}
+	}
 
 	while (window.isOpen()) {
 
@@ -218,7 +227,11 @@ int main() {
 		window.clear(sf::Color(20, 20, 30));
 		pal.draw(window);
 		pilka.draw(window);
+		for (const Stone& blok : bloki) {
+			blok.draw(window);
+		}
 		window.display();
+
 
 		//std::cout << "x=" << pilka.getX() << " y=" << pilka.getY() << " vx=" << pilka.getVx() << " vy=" << pilka.getVy() << std::endl;
 	}
